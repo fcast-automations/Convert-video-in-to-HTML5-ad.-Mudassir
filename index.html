@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google HTML5 Playable Video Ad Generator</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-700 min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="border-b border-slate-200 bg-white sticky top-0 z-50 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-[#1e80f0] flex items-center justify-center shadow-lg shadow-blue-500/20">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-slate-800">Playable Ad Generator</h1>
+          <p class="text-xs text-slate-400">Create interactive video ads for Google Ads</p>
+        </div>
+      </div>
+      <span class="text-xs font-semibold px-3 py-1 rounded-full bg-[#1e80f0]/10 text-[#1e80f0] border border-[#1e80f0]/20">HTML5 Compliant</span>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Input Panel -->
+      <section class="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+          <span class="w-6 h-6 rounded-lg bg-[#1e80f0]/20 text-[#1e80f0] flex items-center justify-center mr-2 text-sm">1</span>
+          Configure Ad Assets
+        </h2>
+
+        <form id="generator-form" class="space-y-6">
+          <!-- Ad Name -->
+          <div>
+            <label for="ad-name" class="block text-sm font-medium text-slate-600 mb-2">Ad Name / ZIP Filename</label>
+            <input type="text" id="ad-name" name="ad-name" required value="interactive-video-ad"
+              class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1e80f0] focus:border-[#1e80f0] transition-colors">
+          </div>
+
+          <!-- Ad Dimensions Dropdown -->
+          <div>
+            <label for="ad-dimensions" class="block text-sm font-medium text-slate-600 mb-2">Select Ad Dimensions</label>
+            <select id="ad-dimensions" name="ad-dimensions" class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1e80f0] focus:border-[#1e80f0] transition-colors">
+              <option value="320x480">Portrait (320 x 480)</option>
+              <option value="300x250">Medium Rectangle (300 x 250)</option>
+              <option value="728x90">Landscape / Leaderboard (728 x 90)</option>
+            </select>
+          </div>
+
+          <!-- Asset Dimension Input Guide Card -->
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs space-y-3">
+            <h3 class="font-semibold text-slate-700 flex items-center space-x-1.5">
+              <svg class="w-4 h-4 text-[#1e80f0]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>Asset Dimension Guidelines</span>
+            </h3>
+            <p class="text-slate-500 leading-relaxed">For perfect visual alignment, ensure your uploaded videos and end card images match the selected ad dimensions:</p>
+            <div class="grid grid-cols-1 gap-2 pt-1 border-t border-slate-200/60">
+              <div class="flex items-center justify-between py-0.5">
+                <span class="font-medium text-slate-600">Portrait (320x480)</span>
+                <span class="px-2 py-0.5 bg-slate-200/60 text-slate-700 rounded-md font-mono font-semibold">2:3 Ratio (e.g. 640x960)</span>
+              </div>
+              <div class="flex items-center justify-between py-0.5">
+                <span class="font-medium text-slate-600">Medium Rectangle (300x250)</span>
+                <span class="px-2 py-0.5 bg-slate-200/60 text-slate-700 rounded-md font-mono font-semibold">6:5 Ratio (e.g. 600x500)</span>
+              </div>
+              <div class="flex items-center justify-between py-0.5">
+                <span class="font-medium text-slate-600">Leaderboard (728x90)</span>
+                <span class="px-2 py-0.5 bg-slate-200/60 text-slate-700 rounded-md font-mono font-semibold">~8:1 Ratio (e.g. 1456x180)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video Upload -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-sm font-medium text-slate-600">Upload Video (.mp4, .webm)</label>
+              <button type="button" onclick="document.getElementById('video-file').click()" class="text-xs font-semibold text-[#1e80f0] hover:text-[#156cd4] flex items-center space-x-1">
+                <span>+ Add more</span>
+              </button>
+            </div>
+            <div class="relative border-2 border-dashed border-slate-300 hover:border-[#1e80f0]/50 rounded-xl p-4 text-center transition-colors bg-slate-50 min-h-[110px] flex items-center justify-center">
+              <!-- Interactive Placeholder Area (Hidden when file uploaded) -->
+              <div class="flex flex-col items-center justify-center py-2 cursor-pointer w-full h-full" id="video-upload-placeholder" onclick="document.getElementById('video-file').click()">
+                <svg class="w-8 h-8 text-slate-400 mb-2 transition-colors group-hover:text-[#1e80f0]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                <p class="text-sm text-slate-600 font-medium">Drag & drop or click to choose video file</p>
+                <p class="text-xs text-slate-400 mt-1">Recommended: MP4 H.264, max 5MB for Google Ads compatibility</p>
+              </div>
+              
+              <!-- Selected File UI -->
+              <div class="hidden w-full flex items-center justify-between text-left" id="video-file-info">
+                <div class="flex items-center space-x-3 truncate">
+                  <div class="w-10 h-10 rounded-lg bg-[#1e80f0]/10 text-[#1e80f0] flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                  </div>
+                  <div class="truncate">
+                    <p class="text-sm font-semibold text-slate-850 truncate" id="video-filename">video.mp4</p>
+                    <p class="text-xs text-slate-455" id="video-filesize">0.0 MB</p>
+                  </div>
+                </div>
+                <button type="button" id="remove-video" class="text-slate-400 hover:text-red-500 p-2 transition-colors relative z-10">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              </div>
+              <input type="file" id="video-file" accept="video/mp4, video/webm" multiple class="hidden">
+            </div>
+          </div>
+
+          <!-- Timestamps File Upload -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-slate-600">Upload Timestamps (.txt, .csv)</label>
+            <div class="relative border-2 border-dashed border-slate-300 hover:border-[#1e80f0]/50 rounded-xl p-4 text-center transition-colors bg-slate-50 min-h-[110px] flex items-center justify-center">
+              <div class="flex flex-col items-center justify-center py-2 cursor-pointer w-full h-full" id="timestamps-upload-placeholder" onclick="document.getElementById('timestamps-file').click()">
+                <svg class="w-8 h-8 text-slate-400 mb-2 transition-colors group-hover:text-[#1e80f0]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <p class="text-sm text-slate-600 font-medium">Drag & drop or click to choose timestamps file</p>
+                <p class="text-xs text-slate-400 mt-1">Format: raw seconds (e.g., 3,5,8 on line 1, 4,5,6 on line 2 for video 2)</p>
+              </div>
+              <div class="hidden w-full flex items-center justify-between text-left" id="timestamps-file-info">
+                <div class="flex items-center space-x-3 truncate">
+                  <div class="w-10 h-10 rounded-lg bg-[#1e80f0]/10 text-[#1e80f0] flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                  </div>
+                  <div class="truncate">
+                    <p class="text-sm font-semibold text-slate-850 truncate" id="timestamps-filename">timestamps.csv</p>
+                    <p class="text-xs text-slate-455" id="timestamps-parsed-preview">No checkpoints detected</p>
+                  </div>
+                </div>
+                <button type="button" id="remove-timestamps" class="text-slate-400 hover:text-red-500 p-2 transition-colors relative z-10">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              </div>
+              <input type="file" id="timestamps-file" accept=".txt,.csv" class="hidden">
+            </div>
+          </div>
+
+          <!-- Final Image Upload -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-sm font-medium text-slate-600">Upload Final Overlay Image (.jpg, .png, .webp)</label>
+              <button type="button" onclick="document.getElementById('image-file').click()" class="text-xs font-semibold text-[#1e80f0] hover:text-[#156cd4] flex items-center space-x-1">
+                <span>+ Add more</span>
+              </button>
+            </div>
+            <div class="relative border-2 border-dashed border-slate-300 hover:border-[#1e80f0]/50 rounded-xl p-4 text-center transition-colors bg-slate-50 min-h-[110px] flex items-center justify-center">
+              <div class="flex flex-col items-center justify-center py-2 cursor-pointer w-full h-full" id="image-upload-placeholder" onclick="document.getElementById('image-file').click()">
+                <svg class="w-8 h-8 text-slate-400 mb-2 transition-colors group-hover:text-[#1e80f0]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <p class="text-sm text-slate-600 font-medium">Drag & drop or click to choose image file</p>
+                <p class="text-xs text-slate-400 mt-1">End card overlay representing the final screen</p>
+              </div>
+              <div class="hidden w-full flex items-center justify-between text-left" id="image-file-info">
+                <div class="flex items-center space-x-3 truncate">
+                  <div class="w-10 h-10 rounded-lg bg-[#1e80f0]/10 text-[#1e80f0] flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                  </div>
+                  <div class="truncate font-medium">
+                    <p class="text-sm font-semibold text-slate-850 truncate" id="image-filename">endcard.png</p>
+                    <p class="text-xs text-slate-455" id="image-filesize">0.0 MB</p>
+                  </div>
+                </div>
+                <button type="button" id="remove-image" class="text-slate-400 hover:text-red-500 p-2 transition-colors relative z-10">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              </div>
+              <input type="file" id="image-file" accept="image/jpeg, image/png, image/webp" multiple class="hidden">
+            </div>
+          </div>
+
+          <!-- Generate Button -->
+          <button type="submit" id="generate-btn" class="w-full bg-[#1e80f0] hover:bg-[#156cd4] text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#1e80f0] focus:ring-offset-2 flex items-center justify-center">
+            <span id="btn-text" class="flex items-center">
+              Generate & Download Ad Package
+              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+            </span>
+            <span id="btn-loader" class="hidden flex items-center space-x-2">
+              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Generating ZIP Package...</span>
+            </span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Preview Panel -->
+      <section class="lg:col-span-5 flex flex-col space-y-6">
+        <!-- Status / Assets Live Preview -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex-grow flex flex-col">
+          <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+            <span class="w-6 h-6 rounded-lg bg-[#1e80f0]/20 text-[#1e80f0] flex items-center justify-center mr-2 text-sm">2</span>
+            Live Assets Preview
+          </h2>
+
+            <!-- Interactive Playable Ad Preview -->
+            <div class="flex-grow flex flex-col justify-center">
+              <p class="text-xs font-semibold text-slate-400 mb-2 uppercase tracking-wider">Interactive Live Preview</p>
+              <div id="preview-wrapper" class="relative aspect-[9/16] max-w-[280px] mx-auto w-full bg-slate-950 rounded-[36px] overflow-hidden border-8 border-slate-800 shadow-2xl flex items-center justify-center transition-all duration-300">
+                <!-- Phone camera speaker notch -->
+                <div id="preview-notch" class="absolute top-2 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-slate-800 rounded-full z-50"></div>
+                
+                <iframe id="preview-iframe" class="hidden w-full h-full border-none" sandbox="allow-scripts allow-same-origin"></iframe>
+                <div id="iframe-preview-placeholder" class="text-center p-4">
+                  <p class="text-xs text-slate-500">Iframe preview will display here once assets are uploaded</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Status Details -->
+            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-xs space-y-2 mt-6">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Timestamps Detected:</span>
+                <span id="status-checkpoints" class="font-semibold text-slate-700">0</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Google Ads ClickTag:</span>
+                <span class="font-semibold text-emerald-600">ExitApi Ready</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Muted AutoPlay:</span>
+                <span class="font-semibold text-[#1e80f0]">Yes (Compliant)</span>
+              </div>
+            </div>
+          </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 py-6 bg-slate-950 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p>&copy; 2026 Playable Ad Generator. Self-contained HTML5 output.</p>
+      <div class="flex space-x-4">
+        <span class="text-slate-400">Powered by JSZip & Tailwind CSS</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JSZip CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <!-- FileSaver.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <!-- Main Logic -->
+  <script src="script.js"></script>
+</body>
+</html>
