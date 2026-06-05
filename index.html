@@ -70,27 +70,12 @@
     <form id="generator-form" class="space-y-8">
       
       <!-- Top Settings Bar -->
-      <section class="glass-panel rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+      <section class="glass-panel rounded-2xl p-6">
         <!-- Input Ad Name -->
         <div>
-          <label for="ad-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Ad Project Name</label>
+          <label for="ad-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Ad Project Name / ZIP Filename</label>
           <input type="text" id="ad-name" name="ad-name" required value="interactive-video-ad"
             class="w-full glass-input rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none text-sm font-medium">
-        </div>
-
-        <!-- Ad Dimensions Dropdown -->
-        <div>
-          <label for="ad-dimensions" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Target Creative Dimensions</label>
-          <div class="relative">
-            <select id="ad-dimensions" name="ad-dimensions" class="w-full glass-input rounded-xl px-4 py-3 text-slate-800 focus:outline-none appearance-none cursor-pointer text-sm font-medium">
-              <option value="320x480">Portrait (320 x 480) — Interstitial</option>
-              <option value="300x250">Medium Rectangle (300 x 250) — Inline</option>
-              <option value="728x90">Landscape / Leaderboard (728 x 90) — Banner</option>
-            </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-            </div>
-          </div>
         </div>
       </section>
 

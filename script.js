@@ -45,6 +45,7 @@ let selectedTimestampsByVideo = []; // Array of arrays: [ [3, 5, 8], [4, 5, 6] ]
 let selectedImages = [];
 let videoObjectURLs = [];
 let imageObjectURLs = [];
+let selectedVideoDimensions = []; // Array of objects: [ {width: 640, height: 960}, ... ]
 
 // Helpers to format bytes
 function formatBytes(bytes, decimals = 2) {
@@ -67,7 +68,17 @@ function cleanImageObjectURLs() {
   imageObjectURLs = [];
 }
 
-const adDimensionsSelect = document.getElementById('ad-dimensions');
+// Helper to extract video metadata dimensions
+function getVideoDimensions(file) {
+  return new Promise((resolve) => {
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.onloadedmetadata = function() {
+      resolve({ width: video.videoWidth, height: video.videoHeight });
+    };
+    video.src = URL.createObjectURL(file);
+  });
+}
 
 // Function to update the iframe with the fully live rendered ad preview
 function updateLiveIframePreview() {
@@ -80,27 +91,39 @@ function updateLiveIframePreview() {
   // Use the first video and matching image/timestamps for previewing
   const firstVideoURL = videoObjectURLs[0] || '';
   const firstImageURL = imageObjectURLs[0] || '';
-  // Set preview device orientation by reading user dropdown selection
-  const selectedDimensions = adDimensionsSelect.value;
+  
+  // Set preview dimensions by reading first video's native size
+  const dims = selectedVideoDimensions[0] || { width: 320, height: 480 };
+  const selectedDimensions = `${dims.width}x${dims.height}`;
+  
   const wrapper = document.getElementById('preview-wrapper');
   const notch = document.getElementById('preview-notch');
-
   const checkpoints = selectedTimestampsByVideo[0] || [];
+
   // Generate the ad markup
   const adHtmlContent = getAdTemplateHTML(firstVideoURL, firstImageURL, checkpoints, selectedDimensions);
 
-  if (selectedDimensions === '320x480') {
-    // Portrait (320 x 480)
-    wrapper.className = "relative aspect-[320/480] max-w-[280px] mx-auto w-full bg-slate-950 rounded-[36px] overflow-hidden border-8 border-slate-800 shadow-2xl flex items-center justify-center transition-all duration-300";
-    notch.className = "absolute top-2 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-slate-800 rounded-full z-50";
-  } else if (selectedDimensions === '300x250') {
-    // Medium Rectangle (300 x 250)
-    wrapper.className = "relative aspect-[300/250] max-w-[320px] mx-auto w-full bg-slate-950 rounded-lg overflow-hidden border-8 border-slate-800 shadow-2xl flex items-center justify-center transition-all duration-300";
-    notch.className = "hidden"; // No phone notch for rectangles
-  } else if (selectedDimensions === '728x90') {
-    // Landscape / Leaderboard (728 x 90)
-    wrapper.className = "relative aspect-[728/90] max-w-[500px] mx-auto w-full bg-slate-950 rounded-lg overflow-hidden border-4 border-slate-800 shadow-2xl flex items-center justify-center transition-all duration-300";
-    notch.className = "hidden";
+  // Set aspect ratio dynamically
+  const aspectRatio = dims.width / dims.height;
+  wrapper.style.aspectRatio = `${dims.width}/${dims.height}`;
+
+  // Apply responsive preview bounding box styling based on landscape vs portrait
+  if (aspectRatio > 1.2) {
+    // Landscape Creative (wider bounding container)
+    wrapper.className = "relative bg-slate-950 rounded-lg overflow-hidden border-4 border-slate-800 shadow-2xl flex items-center justify-center transition-all duration-300 w-full";
+    wrapper.style.maxWidth = "420px";
+    notch.classList.add('hidden');
+  } else if (aspectRatio >= 0.9 && aspectRatio <= 1.2) {
+    // Square / Card Creative
+    wrapper.className = "relative bg-slate-950 rounded-lg overflow-hidden border-8 border-slate-800 shadow-2xl flex items-center justify-center transition-all duration-300 w-full";
+    wrapper.style.maxWidth = "260px";
+    notch.classList.add('hidden');
+  } else {
+    // Portrait Creative (phone wrapper)
+    wrapper.className = "relative bg-slate-950 rounded-[30px] overflow-hidden border-8 border-slate-800 shadow-2xl flex items-center justify-center transition-all duration-300 w-full";
+    wrapper.style.maxWidth = "220px";
+    notch.className = "absolute top-1.5 left-1/2 transform -translate-x-1/2 w-20 h-3.5 bg-slate-850 rounded-full z-50";
+    notch.classList.remove('hidden');
   }
 
   // Write content to iframe srcdoc
@@ -109,23 +132,25 @@ function updateLiveIframePreview() {
   iframePreviewPlaceholder.classList.add('hidden');
 }
 
-// Add dimensions change listener
-adDimensionsSelect.addEventListener('change', updateLiveIframePreview);
-
 // ------------------- FILE UPLOAD EVENT LISTENERS -------------------
 
 // Video Upload Handler (Multiple Videos Supported - Appends Files)
-videoFile.addEventListener('change', (e) => {
+videoFile.addEventListener('change', async (e) => {
   const files = Array.from(e.target.files);
   if (files.length === 0) return;
 
-  // Append new files to the list
-  selectedVideos = [...selectedVideos, ...files];
-
-  // Load preview urls dynamically for the new files
-  files.forEach(file => {
+  // Append new files and read their dimensions
+  for (const file of files) {
+    selectedVideos.push(file);
     videoObjectURLs.push(URL.createObjectURL(file));
-  });
+    try {
+      const dims = await getVideoDimensions(file);
+      selectedVideoDimensions.push(dims);
+    } catch (err) {
+      console.error("Failed to read video dimensions, using fallback:", err);
+      selectedVideoDimensions.push({ width: 320, height: 480 });
+    }
+  }
 
   // Update details UI
   videoFilename.textContent = selectedVideos.length > 1 ? `${selectedVideos.length} Videos selected` : selectedVideos[0].name;
@@ -144,6 +169,7 @@ removeVideoBtn.addEventListener('click', (e) => {
   e.preventDefault();
   e.stopPropagation();
   selectedVideos = [];
+  selectedVideoDimensions = [];
   cleanVideoObjectURLs();
   
   previewIframe.removeAttribute('srcdoc');
@@ -303,7 +329,9 @@ form.addEventListener('submit', async (e) => {
       adZip.file(videoFilenameInZip, video);
       adZip.file(imageFilenameInZip, imageToUse);
 
-      const selectedDimensions = adDimensionsSelect.value;
+      // Get dimensions for this specific video
+      const dims = selectedVideoDimensions[i] || { width: 320, height: 480 };
+      const selectedDimensions = `${dims.width}x${dims.height}`;
       const htmlContent = getAdTemplateHTML(videoFilenameInZip, imageFilenameInZip, checkpoints, selectedDimensions);
       adZip.file('index.html', htmlContent);
 
@@ -370,8 +398,11 @@ function getAdTemplateHTML(videoFile, imageFile, checkpoints, dimensions = '320x
     }
     #ad-container {
       position: relative;
-      width: ${width}px;
-      height: ${height}px;
+      width: 100%;
+      height: 100%;
+      max-width: ${width}px;
+      max-height: ${height}px;
+      aspect-ratio: ${width} / ${height};
       display: flex;
       align-items: center;
       justify-content: center;
