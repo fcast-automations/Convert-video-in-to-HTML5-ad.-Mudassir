@@ -224,8 +224,16 @@ function parseTimestamps(content) {
     const parsedSeconds = [];
 
     rawSeconds.forEach(val => {
-      // Direct raw seconds integer parsing
-      const secs = parseFloat(val);
+      let secs = 0;
+      if (val.includes(':')) {
+        const parts = val.split(':');
+        const s = parseFloat(parts[0]) || 0;
+        const msStr = parts[1] || '0';
+        const msVal = parseFloat(msStr) || 0;
+        secs = s + (msVal / Math.pow(10, msStr.length));
+      } else {
+        secs = parseFloat(val);
+      }
       if (!isNaN(secs)) {
         parsedSeconds.push(secs);
       }
@@ -239,7 +247,7 @@ function parseTimestamps(content) {
   
   // Show a preview of the mapped rows
   timestampsParsedPreview.textContent = selectedTimestampsByVideo
-    .map((arr, i) => `V${i+1}: [${arr.join(', ')}]`)
+    .map((arr, i) => `V${i+1}: [${arr.map(t => t.toFixed(2)).join(', ')}]`)
     .join(' | ');
 }
 
@@ -503,11 +511,23 @@ function getAdTemplateHTML(videoFile, imageFile, checkpoints, dimensions = '320x
 
     // Keep track of checkpoints we've already paused at
     let triggeredCheckpoints = {};
+    let isLoopingCheckpoint = false;
+    let loopStartTime = 0;
+    let loopEndTime = 0;
 
     function checkCheckpoint() {
       if (isTransitioningToEnd) return;
 
       const currentTime = video.currentTime;
+
+      // Handle active checkpoint loop
+      if (isLoopingCheckpoint) {
+        if (currentTime >= loopEndTime) {
+          video.currentTime = loopStartTime;
+        }
+        return;
+      }
+
       const targetTime = checkpoints[currentCheckpointIndex];
 
       // If we crossed a checkpoint and haven't triggered it yet
@@ -522,26 +542,30 @@ function getAdTemplateHTML(videoFile, imageFile, checkpoints, dimensions = '320x
           video.pause();
           showEndCard();
         } else {
-          // Pause for middle checkpoints to request user interaction
-          video.pause();
+          // Loop the video for 1 second smoothly
+          isLoopingCheckpoint = true;
+          loopStartTime = targetTime;
+          loopEndTime = Math.min(targetTime + 1.0, video.duration || targetTime + 1.0);
+          video.currentTime = loopStartTime;
         }
       }
     }
 
     function handleAdInteraction(e) {
       // If video is not playing yet (e.g. browser blocked auto-play entirely)
-      if (video.paused && currentCheckpointIndex === 0 && !triggeredCheckpoints[0]) {
+      if (video.paused && currentCheckpointIndex === 0 && !triggeredCheckpoints[0] && !isLoopingCheckpoint) {
         video.muted = false;
         video.play();
         return;
       }
 
-      // 1. If ad is currently paused at a middle checkpoint: Resume it
-      if (video.paused && currentCheckpointIndex < totalDurationCheckpoints - 1) {
-        // Increment checkpoint index before resuming playback
+      // 1. If ad is currently looping at a checkpoint: Resume it past the loop
+      if (isLoopingCheckpoint) {
+        isLoopingCheckpoint = false;
         currentCheckpointIndex++;
         
-        // Resume video
+        // Seek past the looped segment and resume
+        video.currentTime = loopEndTime;
         video.muted = false;
         video.play();
         return;
