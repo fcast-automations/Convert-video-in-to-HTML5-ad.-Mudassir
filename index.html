@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google HTML5 Playable Video Ad Generator</title>
-  <!-- Tailwind CSS CDN -->
+  <title>HTML5 Playable Video Ad Generator — Google & Mintegral</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -43,48 +41,62 @@
     .btn-transition {
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    .network-card.selected {
+      border-color: #1e80f0;
+      background: rgba(30, 128, 240, 0.06);
+      box-shadow: 0 0 0 1px rgba(30, 128, 240, 0.25);
+    }
+    .network-card.selected .network-check {
+      background: #1e80f0;
+      border-color: #1e80f0;
+    }
+    .network-card.selected .network-check-icon {
+      display: block;
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-700 min-h-screen flex flex-col justify-between selection:bg-[#1e80f0]/20 selection:text-slate-800">
 
-  <!-- Header -->
   <header class="border-b border-slate-200/80 bg-white/70 backdrop-blur-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
       <div class="flex items-center space-x-3">
         <div class="w-10 h-10 rounded-xl bg-[#1e80f0] flex items-center justify-center shadow-lg shadow-blue-500/20">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
           </svg>
         </div>
         <div>
           <h1 class="text-lg font-bold text-slate-800">Playable Ad Generator</h1>
-          <p class="text-xs text-slate-400">Convert video assets to interactive HTML5 formats</p>
+          <p class="text-xs text-slate-400">Interactive HTML5 for Google Ads & Mintegral</p>
         </div>
       </div>
-      <span class="text-xs font-semibold px-3 py-1.5 rounded-full bg-[#1e80f0]/10 text-[#1e80f0] border border-[#1e80f0]/20 shadow-sm">Google Ads Approved</span>
+      <div class="flex items-center gap-2 flex-wrap justify-end">
+        <span id="network-badge" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">Mintegral Ready</span>
+        <a href="https://www.playturbo.com/review" target="_blank" rel="noopener noreferrer"
+          class="text-xs font-semibold px-3 py-1.5 rounded-full bg-white text-slate-600 border border-slate-200 hover:border-[#1e80f0] hover:text-[#1e80f0] btn-transition">
+          Open Mintegral Validator ↗
+        </a>
+      </div>
     </div>
   </header>
 
-  <!-- Main Container -->
   <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
     <form id="generator-form" class="space-y-8">
-      
-      <!-- Top Settings Bar -->
-      <section class="glass-panel rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-        <!-- Input Ad Name -->
+
+      <!-- Settings -->
+      <section class="glass-panel rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label for="ad-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Ad Project Name / ZIP Filename</label>
           <input type="text" id="ad-name" name="ad-name" required value="interactive-video-ad"
             class="w-full glass-input rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none text-sm font-medium">
         </div>
 
-        <!-- Ad Dimensions Dropdown -->
         <div>
-          <label for="ad-dimensions" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Ad Dimensions (Google Ads Compliant)</label>
+          <label for="ad-dimensions" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Ad Dimensions</label>
           <div class="relative">
             <select id="ad-dimensions" name="ad-dimensions" class="w-full glass-input rounded-xl px-4 py-3 text-slate-800 focus:outline-none appearance-none cursor-pointer text-sm font-medium">
-              <option value="320x480">Portrait (320 x 480)</option>
-              <option value="480x320">Landscape (480 x 320)</option>
+              <option value="320x480">Portrait (320 × 480)</option>
+              <option value="480x320">Landscape (480 × 320)</option>
             </select>
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
               <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -93,85 +105,158 @@
         </div>
       </section>
 
-      <!-- Quick Start Guide -->
+      <!-- Network target (multi-select) -->
+      <section class="glass-panel rounded-2xl p-6 space-y-4">
+        <div class="flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <h2 class="text-base font-bold text-slate-800">Target Ad Network(s)</h2>
+            <p class="text-xs text-slate-500 mt-1">
+              Check one or both. <strong>One selected</strong> → one ZIP for that network.
+              <strong>Both selected</strong> → separate ZIPs (Google + Mintegral).
+            </p>
+          </div>
+          <p id="size-limit-hint" class="text-[11px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5">Max package size: 5 MB each</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <label class="network-card selected cursor-pointer rounded-xl border border-slate-200 p-4 transition-all hover-glow block">
+            <input type="checkbox" name="ad-network" value="google" class="sr-only" checked>
+            <div class="flex items-start gap-3">
+              <div class="mt-0.5 w-5 h-5 rounded border-2 border-slate-300 flex items-center justify-center shrink-0 network-check">
+                <svg class="w-3.5 h-3.5 text-white hidden network-check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div class="w-9 h-9 rounded-lg bg-blue-50 text-[#1e80f0] flex items-center justify-center shrink-0 border border-blue-100">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              </div>
+              <div>
+                <p class="text-sm font-bold text-slate-800">Google Ads</p>
+                <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">Original Google-ready build: <code>ExitApi.exit()</code>, <code>ad.size</code> meta. End card optional.</p>
+              </div>
+            </div>
+          </label>
+
+          <label class="network-card cursor-pointer rounded-xl border border-slate-200 p-4 transition-all hover-glow block">
+            <input type="checkbox" name="ad-network" value="mintegral" class="sr-only">
+            <div class="flex items-start gap-3">
+              <div class="mt-0.5 w-5 h-5 rounded border-2 border-slate-300 flex items-center justify-center shrink-0 network-check">
+                <svg class="w-3.5 h-3.5 text-white hidden network-check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <div>
+                <p class="text-sm font-bold text-slate-800">Mintegral / Playturbo</p>
+                <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">Uses <code>gameReady</code>, <code>gameStart</code>, <code>gameEnd</code>, <code>install</code>. No external scripts.</p>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <p id="network-export-hint" class="text-[11px] text-slate-500 bg-slate-50 border border-slate-200/70 rounded-lg px-3 py-2">
+          Export: <span id="network-export-label" class="font-semibold text-slate-700">Google Ads only</span>
+        </p>
+
+        <div id="mintegral-options" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div>
+            <label for="store-url" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+              Fallback Store URL <span class="normal-case font-medium text-slate-400">(optional — local preview only)</span>
+            </label>
+            <input type="url" id="store-url" name="store-url" placeholder="https://play.google.com/store/apps/details?id=..."
+              class="w-full glass-input rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none text-sm font-medium">
+            <p class="text-[10px] text-slate-400 mt-1.5">In live Mintegral traffic, <code>window.install()</code> is injected by the SDK. This URL is only used when testing offline.</p>
+          </div>
+          <div class="glass-card rounded-xl p-4 text-[11px] text-slate-600 space-y-1.5 border border-slate-200/60">
+            <p class="font-bold text-slate-800">Mintegral compliance checklist</p>
+            <ul class="list-disc pl-4 space-y-1 text-slate-500">
+              <li>ZIP ≤ 5 MB, all assets local (no CDN / XHR)</li>
+              <li>Calls <code>gameReady</code> after assets load</li>
+              <li>Exposes <code>gameStart</code> for SDK kickoff</li>
+              <li>Calls <code>gameEnd</code> when interaction ends</li>
+              <li>Full-screen tap uses <code>window.install()</code> (not ExitApi)</li>
+              <li>Mouse + touch clicks work (PC validator)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Start -->
       <section class="glass-panel rounded-2xl p-6 border-l-4 border-l-[#1e80f0] space-y-4">
         <div class="flex items-start space-x-3">
           <div class="p-2 bg-[#1e80f0]/10 text-[#1e80f0] rounded-xl shrink-0">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
             </svg>
           </div>
           <div>
             <h2 class="text-sm font-bold text-slate-800">Quick Start & Usage Guide</h2>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">Follow these steps to generate high-performance, interactive Google Ads HTML5 playable bundles automatically scaled to your video's size.</p>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">Build interactive video playables with checkpoint loops. End card images are optional. Full-screen tap handles continue / install (no CTA button).</p>
           </div>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-2 text-xs">
           <div class="p-3 bg-white/50 rounded-xl border border-slate-200/50 space-y-1">
             <p class="font-bold text-slate-700 flex items-center">
               <span class="w-4 h-4 rounded-full bg-[#1e80f0] text-white flex items-center justify-center mr-1.5 text-[10px] font-semibold">1</span>
-              Add Video Ads
+              Choose Network
             </p>
-            <p class="text-slate-500 leading-relaxed text-[11px]">Upload one or more video files. Ad packages automatically adapt to each video's dimensions.</p>
+            <p class="text-slate-500 leading-relaxed text-[11px]">Mintegral (recommended for MTG campaigns) or Google Ads. APIs differ — do not mix.</p>
           </div>
           <div class="p-3 bg-white/50 rounded-xl border border-slate-200/50 space-y-1">
             <p class="font-bold text-slate-700 flex items-center">
               <span class="w-4 h-4 rounded-full bg-[#1e80f0] text-white flex items-center justify-center mr-1.5 text-[10px] font-semibold">2</span>
-              Add End Cards
+              Add Video + Checkpoints
             </p>
-            <p class="text-slate-500 leading-relaxed text-[11px]">Upload matching end card images. They appear at the end of the video as the call-to-action screens.</p>
+            <p class="text-slate-500 leading-relaxed text-[11px]">Upload video(s) and a timestamps file (<code>seconds:ms</code> or plain seconds). End card image is optional.</p>
           </div>
           <div class="p-3 bg-white/50 rounded-xl border border-slate-200/50 space-y-1">
             <p class="font-bold text-slate-700 flex items-center">
               <span class="w-4 h-4 rounded-full bg-[#1e80f0] text-white flex items-center justify-center mr-1.5 text-[10px] font-semibold">3</span>
-              Set Timestamps
+              Preview Live
             </p>
-            <p class="text-slate-500 leading-relaxed text-[11px]">Upload a text file with checkpoints formatted as <code>seconds:milliseconds</code> (e.g. <code>04:50,08:20</code>). The ad will loop a 1-second segment at these timestamps.</p>
+            <p class="text-slate-500 leading-relaxed text-[11px]">Use the simulator. Tap through loops; at the end, a full-screen tap fires install / exit.</p>
           </div>
           <div class="p-3 bg-white/50 rounded-xl border border-slate-200/50 space-y-1">
             <p class="font-bold text-slate-700 flex items-center">
               <span class="w-4 h-4 rounded-full bg-[#1e80f0] text-white flex items-center justify-center mr-1.5 text-[10px] font-semibold">4</span>
-              Test & Download
+              Generate & Validate
             </p>
-            <p class="text-slate-500 leading-relaxed text-[11px]">Interact with the live simulator monitor on the right. When satisfied, click Generate to download the zip package.</p>
+            <p class="text-slate-500 leading-relaxed text-[11px]">Download ZIP, then test Mintegral builds on <a class="text-[#1e80f0] font-semibold underline" href="https://www.playturbo.com/review" target="_blank" rel="noopener">Playturbo Review</a>.</p>
           </div>
         </div>
       </section>
 
-      <!-- Main Columns Grid Layout -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <!-- Left: Upload Workstation -->
+
+        <!-- Left column -->
         <div class="lg:col-span-7 space-y-6">
-          
-          <!-- Asset Uploads Group -->
+
           <section class="glass-panel rounded-2xl p-6 space-y-6">
             <h2 class="text-base font-bold text-slate-800 flex items-center">
               <span class="w-6 h-6 rounded-md bg-[#1e80f0]/10 text-[#1e80f0] flex items-center justify-center mr-2 text-xs font-bold border border-[#1e80f0]/20 shadow-sm">1</span>
               Upload Creative Assets
             </h2>
 
-            <!-- Video File Input -->
+            <!-- Video -->
             <div class="space-y-2">
               <div class="flex items-center justify-between">
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">Video Source</label>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">Video Source <span class="text-red-500">*</span></label>
                 <button type="button" onclick="document.getElementById('video-file').click()" class="text-xs font-bold text-[#1e80f0] hover:text-blue-600 flex items-center space-x-1 btn-transition">
                   <span>+ Add another video</span>
                 </button>
               </div>
               <div class="relative border border-dashed border-slate-300 hover-glow rounded-xl p-4 text-center transition-all bg-white/40 min-h-[100px] flex items-center justify-center">
                 <div class="flex flex-col items-center justify-center py-2 cursor-pointer w-full h-full" id="video-upload-placeholder" onclick="document.getElementById('video-file').click()">
-                  <svg class="w-7 h-7 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg class="w-7 h-7 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                   </svg>
                   <p class="text-xs text-slate-600 font-medium">Choose video files (MP4 or WebM)</p>
+                  <p class="text-[10px] text-slate-400 mt-1">Keep total ZIP under 5 MB for Mintegral / Google</p>
                 </div>
-                
+
                 <div class="hidden w-full flex items-center justify-between text-left" id="video-file-info">
                   <div class="flex items-center space-x-3 truncate">
                     <div class="w-9 h-9 rounded-lg bg-[#1e80f0]/10 text-[#1e80f0] flex items-center justify-center shrink-0 border border-[#1e80f0]/15">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                       </svg>
                     </div>
@@ -181,7 +266,7 @@
                     </div>
                   </div>
                   <button type="button" id="remove-video" class="text-slate-400 hover:text-red-500 p-1.5 transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                     </svg>
                   </button>
@@ -190,26 +275,30 @@
               </div>
             </div>
 
-            <!-- Endcard Image File Input -->
+            <!-- End card OPTIONAL -->
             <div class="space-y-2">
               <div class="flex items-center justify-between">
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">Overlay/End Card Image</label>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  Overlay / End Card Image
+                  <span class="ml-1.5 normal-case font-semibold text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 border border-slate-200">Optional</span>
+                </label>
                 <button type="button" onclick="document.getElementById('image-file').click()" class="text-xs font-bold text-[#1e80f0] hover:text-blue-600 flex items-center space-x-1 btn-transition">
                   <span>+ Add another image</span>
                 </button>
               </div>
               <div class="relative border border-dashed border-slate-300 hover-glow rounded-xl p-4 text-center transition-all bg-white/40 min-h-[100px] flex items-center justify-center">
                 <div class="flex flex-col items-center justify-center py-2 cursor-pointer w-full h-full" id="image-upload-placeholder" onclick="document.getElementById('image-file').click()">
-                  <svg class="w-7 h-7 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg class="w-7 h-7 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                   </svg>
                   <p class="text-xs text-slate-600 font-medium">Choose end card images (PNG, JPG, WEBP)</p>
+                  <p class="text-[10px] text-slate-400 mt-1">Optional — skip to keep video-only ending (tap to install)</p>
                 </div>
-                
+
                 <div class="hidden w-full flex items-center justify-between text-left" id="image-file-info">
                   <div class="flex items-center space-x-3 truncate">
                     <div class="w-9 h-9 rounded-lg bg-[#1e80f0]/10 text-[#1e80f0] flex items-center justify-center shrink-0 border border-[#1e80f0]/15">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                       </svg>
                     </div>
@@ -219,7 +308,7 @@
                     </div>
                   </div>
                   <button type="button" id="remove-image" class="text-slate-400 hover:text-red-500 p-1.5 transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                     </svg>
                   </button>
@@ -229,7 +318,7 @@
             </div>
           </section>
 
-          <!-- Timestamps & Guidelines Panel -->
+          <!-- Timestamps -->
           <section class="glass-panel rounded-2xl p-6 space-y-4">
             <h2 class="text-base font-bold text-slate-800 flex items-center">
               <span class="w-6 h-6 rounded-md bg-[#1e80f0]/10 text-[#1e80f0] flex items-center justify-center mr-2 text-xs font-bold border border-[#1e80f0]/20 shadow-sm">2</span>
@@ -237,21 +326,20 @@
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Timestamps input -->
               <div class="space-y-2">
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">Timestamps File (.txt, .csv)</label>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">Timestamps File (.txt, .csv) <span class="text-red-500">*</span></label>
                 <div class="relative border border-dashed border-slate-300 hover-glow rounded-xl p-4 text-center transition-all bg-white/40 min-h-[90px] flex items-center justify-center">
                   <div class="flex flex-col items-center justify-center py-1 cursor-pointer w-full h-full" id="timestamps-upload-placeholder" onclick="document.getElementById('timestamps-file').click()">
-                    <svg class="w-6 h-6 text-slate-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="w-6 h-6 text-slate-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     <p class="text-[11px] text-slate-600 font-medium">Select checkpoints file</p>
                   </div>
-                  
+
                   <div class="hidden w-full flex items-center justify-between text-left" id="timestamps-file-info">
                     <div class="flex items-center space-x-2 truncate">
                       <div class="w-8 h-8 rounded-lg bg-[#1e80f0]/10 text-[#1e80f0] flex items-center justify-center shrink-0 border border-[#1e80f0]/15">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                         </svg>
                       </div>
@@ -261,7 +349,7 @@
                       </div>
                     </div>
                     <button type="button" id="remove-timestamps" class="text-slate-400 hover:text-red-500 p-1.5 transition-colors">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                       </svg>
                     </button>
@@ -270,38 +358,25 @@
                 </div>
               </div>
 
-              <!-- Dimensions Guidelines Card -->
               <div class="glass-card border border-slate-200/50 rounded-xl p-3 text-[11px] space-y-2 flex flex-col justify-center">
                 <div class="flex items-center space-x-1.5 font-semibold text-slate-700">
-                  <svg class="w-3.5 h-3.5 text-[#1e80f0]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg class="w-3.5 h-3.5 text-[#1e80f0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
-                  <span>Required Proportions:</span>
+                  <span>Timestamp format tips</span>
                 </div>
                 <div class="space-y-1 text-slate-500">
-                  <div class="flex justify-between border-b border-slate-200/30 pb-0.5">
-                    <span>Portrait (320x480)</span>
-                    <span class="font-semibold text-slate-700">2:3 Ratio</span>
-                  </div>
-                  <div class="flex justify-between border-b border-slate-200/30 pb-0.5">
-                    <span>Rectangle (300x250)</span>
-                    <span class="font-semibold text-slate-700">6:5 Ratio</span>
-                  </div>
-                  <div class="flex justify-between">
-                    <span>Leaderboard (728x90)</span>
-                    <span class="font-semibold text-slate-700">~8:1 Ratio</span>
-                  </div>
+                  <p>One line per video. Comma-separated times:</p>
+                  <p class="font-mono text-[10px] bg-white/70 rounded px-2 py-1 text-slate-700">3, 8.5, 12:50</p>
+                  <p><code>ss:ms</code> or plain seconds both work. Ad loops ~1s at each checkpoint until the user taps.</p>
                 </div>
               </div>
             </div>
           </section>
-
         </div>
 
-        <!-- Right: Real-time Workstation Preview -->
+        <!-- Right: preview -->
         <div class="lg:col-span-5 space-y-6">
-          
-          <!-- Sticky Preview & Generation Panel -->
           <section class="glass-panel rounded-2xl p-6 flex flex-col justify-between min-h-[460px]">
             <div>
               <h2 class="text-base font-bold text-slate-800 mb-4 flex items-center">
@@ -309,42 +384,39 @@
                 Real-time Monitor
               </h2>
 
-              <!-- Virtual Device Simulator Screen -->
               <div class="relative w-full py-4 flex items-center justify-center">
-                <div id="preview-wrapper" class="relative aspect-[9/16] max-w-[240px] mx-auto w-full bg-slate-950 rounded-[30px] overflow-hidden border-8 border-slate-850 shadow-2xl flex items-center justify-center transition-all duration-300">
-                  <div id="preview-notch" class="absolute top-1.5 left-1/2 transform -translate-x-1/2 w-20 h-3.5 bg-slate-850 rounded-full z-50"></div>
-                  
-                  <iframe id="preview-iframe" class="hidden w-full h-full border-none" sandbox="allow-scripts allow-same-origin"></iframe>
+                <div id="preview-wrapper" class="relative aspect-[9/16] max-w-[240px] mx-auto w-full bg-slate-950 rounded-[30px] overflow-hidden border-8 border-slate-800 shadow-2xl flex items-center justify-center transition-all duration-300">
+                  <div id="preview-notch" class="absolute top-1.5 left-1/2 transform -translate-x-1/2 w-20 h-3.5 bg-slate-800 rounded-full z-50"></div>
+                  <iframe id="preview-iframe" class="hidden w-full h-full border-none" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
                   <div id="iframe-preview-placeholder" class="text-center p-6 text-slate-400 max-w-[180px]">
-                    <p class="text-xs leading-relaxed">Preview will compile here as soon as assets are loaded</p>
+                    <p class="text-xs leading-relaxed">Upload a video (and timestamps) to compile the live preview. End card is optional.</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Stats & Compile Trigger -->
             <div class="space-y-4 pt-4 border-t border-slate-200/60">
-              <!-- Inline mini status dashboard -->
               <div class="grid grid-cols-3 gap-2 text-[10px] text-center font-medium">
                 <div class="p-2 bg-slate-100/50 rounded-lg border border-slate-200/30">
                   <p class="text-slate-400 mb-0.5">Checkpoints</p>
                   <p id="status-checkpoints" class="font-bold text-slate-800 text-xs">0</p>
                 </div>
                 <div class="p-2 bg-slate-100/50 rounded-lg border border-slate-200/30">
-                  <p class="text-slate-400 mb-0.5">Google Exit API</p>
-                  <p class="font-bold text-emerald-600 text-xs">Active</p>
+                  <p class="text-slate-400 mb-0.5">CTA API</p>
+                  <p id="status-cta-api" class="font-bold text-emerald-600 text-xs">install()</p>
                 </div>
                 <div class="p-2 bg-slate-100/50 rounded-lg border border-slate-200/30">
-                  <p class="text-slate-400 mb-0.5">Muted Autoplay</p>
-                  <p class="font-bold text-[#1e80f0] text-xs">Compliant</p>
+                  <p class="text-slate-400 mb-0.5">End Card</p>
+                  <p id="status-endcard" class="font-bold text-slate-500 text-xs">Optional</p>
                 </div>
               </div>
 
-              <!-- Main Button inside Preview workstation -->
+              <p id="package-size-warning" class="hidden text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2"></p>
+
               <button type="submit" id="generate-btn" class="w-full bg-[#1e80f0] hover:bg-blue-600 text-white font-semibold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#1e80f0] focus:ring-offset-2 flex items-center justify-center btn-transition text-sm">
                 <span id="btn-text" class="flex items-center font-bold">
                   Generate Ad ZIP Package
-                  <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                   </svg>
                 </span>
@@ -358,28 +430,22 @@
               </button>
             </div>
           </section>
-
         </div>
-
       </div>
     </form>
   </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-slate-200/60 py-6 bg-slate-100/80 text-center text-xs text-slate-455">
+  <footer class="border-t border-slate-200/60 py-6 bg-slate-100/80 text-center text-xs text-slate-500">
     <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-      <p>&copy; 2026 Playable Ad Generator. Self-contained HTML5 output.</p>
+      <p>&copy; 2026 Playable Ad Generator · Google Ads + Mintegral HTML5 output</p>
       <div class="flex space-x-4">
         <span class="text-slate-400">Powered by JSZip & Tailwind CSS</span>
       </div>
     </div>
   </footer>
 
-  <!-- JSZip CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <!-- FileSaver.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-  <!-- Main Logic -->
   <script src="script.js"></script>
 </body>
 </html>
