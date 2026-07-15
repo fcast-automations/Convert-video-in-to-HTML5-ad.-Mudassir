@@ -409,6 +409,15 @@ async function buildAdZipForNetwork(videoIndex, network, options) {
     adZip.file(imageFilenameInZip, imageToUse);
   }
 
+  const adNameBase =
+    adNameInput.value.trim().replace(/[^a-zA-Z0-9-_]/g, '') || 'interactive-ad';
+  const zipNameWithoutExt =
+    selectedVideos.length === 1
+      ? `${adNameBase}-${network}`
+      : `${adNameBase}-${network}-video${videoIndex + 1}`;
+
+  const htmlFilename = network === 'mintegral' ? `${zipNameWithoutExt}.html` : 'index.html';
+
   const htmlContent = getAdTemplateHTML({
     videoFile: videoFilenameInZip,
     imageFile: imageFilenameInZip,
@@ -418,7 +427,7 @@ async function buildAdZipForNetwork(videoIndex, network, options) {
     storeUrl,
     hasEndcard: Boolean(imageToUse)
   });
-  adZip.file('index.html', htmlContent);
+  adZip.file(htmlFilename, htmlContent);
 
   const archiveBlob = await adZip.generateAsync({
     type: 'blob',
