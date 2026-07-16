@@ -104,6 +104,19 @@ function escapeJsString(str) {
     .replace(/\r/g, '');
 }
 
+function sanitizeAdName(name) {
+  return String(name).trim().replace(/[^a-zA-Z0-9_]+/g, '_').replace(/^_+|_+$/g, '') || 'interactive_ad';
+}
+
+function fileToDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error || new Error(`Could not read ${file.name}`));
+    reader.readAsDataURL(file);
+  });
+}
+
 function updateEndcardStatus() {
   if (selectedImages.length === 0) {
     statusEndcard.textContent = 'None';
@@ -171,7 +184,7 @@ function updateNetworkUI() {
     statusCtaApi.textContent = 'Both APIs';
     statusCtaApi.className = 'font-bold text-indigo-600 text-xs';
     if (exportLabel) {
-      exportLabel.textContent = 'Separate ZIPs: *-google.zip and *-mintegral.zip';
+      exportLabel.textContent = 'Separate ZIPs: *_google.zip and *_mintegral.zip';
     }
   } else if (hasMintegral) {
     networkBadge.textContent = 'Mintegral Ready';
@@ -384,7 +397,7 @@ removeImageBtn.addEventListener('click', (e) => {
  * Build one network-specific ad ZIP blob for a video index.
  */
 async function buildAdZipForNetwork(videoIndex, network, options) {
-  const { selectedDimensions, storeUrl } = options;
+  const { selectedDimensions, storeUrl, adNameBase } = options;
   const video = selectedVideos[videoIndex];
   const videoExt = (video.name.split('.').pop() || 'mp4').toLowerCase();
   const videoFilenameInZip = `video.${videoExt}`;
@@ -404,23 +417,26 @@ async function buildAdZipForNetwork(videoIndex, network, options) {
     selectedTimestampsByVideo[videoIndex] || selectedTimestampsByVideo[0] || [];
 
   const adZip = new JSZip();
-  adZip.file(videoFilenameInZip, video);
-  if (imageToUse) {
-    adZip.file(imageFilenameInZip, imageToUse);
-  }
-
-  const adNameBase =
-    adNameInput.value.trim().replace(/[^a-zA-Z0-9-_]/g, '') || 'interactive-ad';
   const zipNameWithoutExt =
     selectedVideos.length === 1
-      ? `${adNameBase}-${network}`
-      : `${adNameBase}-${network}-video${videoIndex + 1}`;
+      ? `${adNameBase}_${network}`
+      : `${adNameBase}_${network}_video${videoIndex + 1}`;
+
+  let videoSource = videoFilenameInZip;
+  let imageSource = imageFilenameInZip;
+  if (network === 'mintegral') {
+    videoSource = await fileToDataURL(video);
+    imageSource = imageToUse ? await fileToDataURL(imageToUse) : '';
+  } else {
+    adZip.file(videoFilenameInZip, video);
+    if (imageToUse) adZip.file(imageFilenameInZip, imageToUse);
+  }
 
   const htmlFilename = network === 'mintegral' ? `${zipNameWithoutExt}.html` : 'index.html';
 
   const htmlContent = getAdTemplateHTML({
-    videoFile: videoFilenameInZip,
-    imageFile: imageFilenameInZip,
+    videoFile: videoSource,
+    imageFile: imageSource,
     checkpoints,
     dimensions: selectedDimensions,
     network,
@@ -436,12 +452,12 @@ async function buildAdZipForNetwork(videoIndex, network, options) {
   });
 
   if (archiveBlob.size > MAX_PACKAGE_BYTES) {
-    console.warn(
-      `[${network}] video ${videoIndex + 1} package is ${formatBytes(archiveBlob.size)} (over 5 MB).`
+    throw new Error(
+      `${zipNameWithoutExt}.zip is ${formatBytes(archiveBlob.size)}. Compress the video or image so the package stays under Mintegral's 5 MB limit.`
     );
   }
 
-  return archiveBlob;
+  return { blob: archiveBlob, filename: `${zipNameWithoutExt}.zip` };
 }
 
 form.addEventListener('submit', async (e) => {
@@ -467,35 +483,21 @@ form.addEventListener('submit', async (e) => {
 
   const selectedDimensions = adDimensionsSelect.value;
   const storeUrl = getStoreUrl();
-  const adNameBase =
-    adNameInput.value.trim().replace(/[^a-zA-Z0-9-_]/g, '') || 'interactive-ad';
-  const buildOpts = { selectedDimensions, storeUrl };
+  const adNameBase = sanitizeAdName(adNameInput.value);
+  adNameInput.value = adNameBase;
+  const buildOpts = { selectedDimensions, storeUrl, adNameBase };
 
   try {
-    // When both networks are selected → separate ZIPs per network.
-    // When one network → only that network.
-    // Multiple videos → pack that network's ads into a parent ZIP for that network.
+    // Every downloaded ZIP is a directly uploadable ad (never a ZIP containing other ZIPs).
     for (const network of networks) {
-      if (selectedVideos.length === 1) {
-        const blob = await buildAdZipForNetwork(0, network, buildOpts);
-        saveAs(blob, `${adNameBase}-${network}.zip`);
-      } else {
-        const networkBundle = new JSZip();
-        for (let i = 0; i < selectedVideos.length; i++) {
-          const blob = await buildAdZipForNetwork(i, network, buildOpts);
-          networkBundle.file(`${adNameBase}-${network}-video${i + 1}.zip`, blob);
-        }
-        const bundleBlob = await networkBundle.generateAsync({
-          type: 'blob',
-          compression: 'DEFLATE',
-          compressionOptions: { level: 6 }
-        });
-        saveAs(bundleBlob, `${adNameBase}-${network}-all-ads.zip`);
+      for (let i = 0; i < selectedVideos.length; i++) {
+        const adPackage = await buildAdZipForNetwork(i, network, buildOpts);
+        saveAs(adPackage.blob, adPackage.filename);
       }
     }
   } catch (err) {
     console.error('Error generating playable ad:', err);
-    alert('Failed to generate ad package. Check the console for details.');
+    alert(err && err.message ? err.message : 'Failed to generate ad package.');
   } finally {
     generateBtn.disabled = false;
     btnText.classList.remove('hidden');

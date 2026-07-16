@@ -1,0 +1,60 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Mintegral export check</title>
+<p id="result">Running...</p>
+<iframe id="app" src="index.html" hidden></iframe>
+<script>
+const result = document.getElementById('result');
+const fail = (message) => { throw new Error(message); };
+
+document.getElementById('app').addEventListener('load', async function () {
+  const w = this.contentWindow;
+
+  try {
+    w.alert = fail;
+    w.saveAs = async (blob, filename) => {
+      try {
+        if (filename !== 'My_Ad_1_mintegral.zip') fail(`Unsafe ZIP name: ${filename}`);
+
+        const zip = await w.JSZip.loadAsync(blob);
+        const names = Object.keys(zip.files);
+        if (names.length !== 1 || names[0] !== 'My_Ad_1_mintegral.html') {
+          fail(`Unexpected ZIP contents: ${names.join(', ')}`);
+        }
+
+        const html = await zip.file(names[0]).async('string');
+        if (!html.includes('src="data:video/mp4;base64,')) fail('Video is not embedded');
+        if (!html.includes("background-image: url('data:image/png;base64,")) fail('Image is not embedded');
+        if (/<script[^>]+src=|\b(?:fetch|XMLHttpRequest)\s*\(/i.test(html)) fail('Dynamic asset request found');
+
+        result.textContent = 'PASS';
+      } catch (error) {
+        result.textContent = `FAIL: ${error.message}`;
+      }
+    };
+
+    w.document.getElementById('ad-name').value = ' My Ad-1! ';
+
+    const networks = w.document.querySelectorAll('input[name="ad-network"]');
+    networks.forEach((input) => { input.checked = input.value === 'mintegral'; });
+    networks[1].dispatchEvent(new w.Event('change', { bubbles: true }));
+
+    const setFile = (id, file) => {
+      const transfer = new w.DataTransfer();
+      transfer.items.add(file);
+      const input = w.document.getElementById(id);
+      input.files = transfer.files;
+      input.dispatchEvent(new w.Event('change', { bubbles: true }));
+    };
+
+    setFile('video-file', new w.File(['video'], 'unsafe-video.mp4', { type: 'video/mp4' }));
+    setFile('image-file', new w.File(['image'], 'unsafe image.png', { type: 'image/png' }));
+    setFile('timestamps-file', new w.File(['1.0'], 'times.txt', { type: 'text/plain' }));
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    w.document.getElementById('generator-form').requestSubmit();
+  } catch (error) {
+    result.textContent = `FAIL: ${error.message}`;
+  }
+});
+</script>

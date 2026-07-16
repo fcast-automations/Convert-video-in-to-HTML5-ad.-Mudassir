@@ -87,8 +87,10 @@
       <section class="glass-panel rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label for="ad-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Ad Project Name / ZIP Filename</label>
-          <input type="text" id="ad-name" name="ad-name" required value="interactive-video-ad"
+          <input type="text" id="ad-name" name="ad-name" required value="interactive_video_ad"
+            title="Use letters, numbers, and underscores only"
             class="w-full glass-input rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none text-sm font-medium">
+          <p class="text-[10px] text-slate-400 mt-1.5">Letters, numbers, and underscores only. Other characters are converted to underscores on export.</p>
         </div>
 
         <div>
@@ -111,8 +113,8 @@
           <div>
             <h2 class="text-base font-bold text-slate-800">Target Ad Network(s)</h2>
             <p class="text-xs text-slate-500 mt-1">
-              Check one or both. <strong>One selected</strong> → one ZIP for that network.
-              <strong>Both selected</strong> → separate ZIPs (Google + Mintegral).
+              Check one or both. Each video exports as its own validator-ready ZIP.
+              <strong>Both selected</strong> → separate ZIPs for Google and Mintegral.
             </p>
           </div>
           <p id="size-limit-hint" class="text-[11px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5">Max package size: 5 MB each</p>
